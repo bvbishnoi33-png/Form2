@@ -1,43 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Admin</title>
+<title>Admin Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{font-family:Inter;background:#f4f6fb;padding:24px}
-.card{background:#fff;padding:16px;border-radius:10px;margin-bottom:12px}
-input,button{padding:8px}
+body{margin:0;font-family:Inter;background:#f8fafc}
+header{padding:20px;background:#0f172a;color:#fff}
+main{padding:24px;max-width:1000px;margin:auto}
+.card{background:#fff;border-radius:14px;padding:16px;
+box-shadow:0 10px 30px rgba(0,0,0,.06);margin-bottom:16px}
+input,select,button{padding:8px;margin:6px}
 button{background:#2563eb;color:#fff;border:none;border-radius:6px}
+.field{display:flex;gap:6px;align-items:center}
 </style>
 </head>
 
 <body>
 
-<h2>Admin Dashboard</h2>
+<header>Admin Dashboard</header>
 
-<input id="name" placeholder="Form Name">
-<button onclick="create()">Create</button>
+<main>
+<h3>Create Form</h3>
+<input id="formName" placeholder="Form Name">
+<button onclick="createForm()">Create</button>
 
-<div id="list"></div>
+<h3>Forms</h3>
+<div id="forms"></div>
+</main>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore,collection,addDoc,getDocs,updateDoc,doc } from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const app = initializeApp({
  apiKey:"AIzaSyDVP6-QjZMZhUoWFJ80WRNH3ieyhHWq3gQ",
  authDomain:"form2-9ad72.firebaseapp.com",
  projectId:"form2-9ad72"
 });
-const db = getFirestore(app);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+onAuthStateChanged(auth,u=>{ if(!u) location.href="login.html"; });
 
 async function load(){
- list.innerHTML="";
+ forms.innerHTML="";
  const snap=await getDocs(collection(db,"forms"));
  snap.forEach(d=>{
   const f=d.data();
-  list.innerHTML+=`
+  forms.innerHTML+=`
    <div class="card">
-    ${f.name} |
+    <b>${f.name}</b><br>
     <button onclick="toggle('${d.id}',${!f.enabled})">
       ${f.enabled?'Hide':'Show'}
     </button>
@@ -46,19 +60,20 @@ async function load(){
 }
 load();
 
-window.create=async()=>{
+window.createForm=async()=>{
  await addDoc(collection(db,"forms"),{
-  name:name.value,
-  enabled:true
+  name:formName.value,
+  enabled:true,
+  fields:[]
  });
- name.value="";
+ formName.value="";
  load();
-};
+}
 
 window.toggle=async(id,val)=>{
  await updateDoc(doc(db,"forms",id),{enabled:val});
  load();
-};
+}
 </script>
 
 </body>
