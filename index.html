@@ -2,94 +2,76 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Form Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forms Portal</title>
 
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Inter,Segoe UI,sans-serif;
-  background:#f4f6fb;
-  color:#222;
-}
-header{
-  background:#1e293b;
-  color:#fff;
-  padding:16px 24px;
-  font-size:20px;
-}
-.layout{
-  display:flex;
-  min-height:100vh;
-}
-nav{
-  width:220px;
-  background:#0f172a;
-  color:#fff;
-  padding:20px;
-}
-nav a{
-  display:block;
-  color:#cbd5f5;
-  text-decoration:none;
-  margin-bottom:12px;
-}
-nav a:hover{color:#fff}
-main{
-  flex:1;
-  padding:24px;
-}
-.card{
-  background:#fff;
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:16px;
-  box-shadow:0 8px 20px rgba(0,0,0,.06);
-}
-button{
-  background:#2563eb;
-  color:#fff;
-  border:none;
-  padding:10px 16px;
-  border-radius:8px;
-  cursor:pointer;
-}
+body{margin:0;font-family:Inter,Segoe UI;background:#f8fafc;color:#0f172a}
+header{height:64px;background:#fff;border-bottom:1px solid #e5e7eb;
+display:flex;align-items:center;padding:0 20px;gap:14px}
+.menu-btn{font-size:22px;cursor:pointer}
+h1{font-size:18px;margin:0}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none}
+.drawer{position:fixed;top:0;left:-260px;width:260px;height:100%;
+background:#0f172a;color:#fff;padding:20px;transition:.3s}
+.drawer a{display:block;color:#cbd5f5;text-decoration:none;margin:14px 0}
+.drawer a:hover{color:#fff}
+.drawer.open{left:0}
+.overlay.show{display:block}
+
+main{padding:24px;max-width:1100px;margin:auto}
+.card{background:#fff;border-radius:14px;padding:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.06);margin-bottom:16px}
+button{background:#2563eb;color:#fff;border:none;
+padding:10px 16px;border-radius:8px;cursor:pointer}
 button:hover{opacity:.9}
-footer{
-  text-align:center;
-  padding:14px;
-  background:#e5e7eb;
-}
-@media(max-width:768px){
-  nav{display:none}
+
+footer{text-align:center;padding:16px;background:#fff;border-top:1px solid #e5e7eb}
+
+@media(max-width:640px){
+  main{padding:16px}
 }
 </style>
 </head>
 
 <body>
 
-<header>Dynamic Form Management Portal</header>
+<header>
+  <div class="menu-btn" onclick="openMenu()">☰</div>
+  <h1>Dynamic Form Management Portal</h1>
+</header>
 
-<div class="layout">
-<nav>
-  <a href="#">Home</a>
-  <a href="#forms">Available Forms</a>
-  <a href="#about">About Us</a>
+<div class="overlay" onclick="closeMenu()"></div>
+
+<nav class="drawer">
+  <div style="font-size:20px;cursor:pointer" onclick="closeMenu()">✕</div>
+  <a href="#" onclick="show('home')">Home</a>
+  <a href="#" onclick="show('forms')">Available Forms</a>
+  <a href="#" onclick="show('about')">About Us</a>
 </nav>
 
 <main>
-  <h2>Available Forms</h2>
-  <div id="forms"></div>
+  <section id="home">
+    <h2>Welcome</h2>
+    <p>Fill official forms securely and easily.</p>
+  </section>
 
-  <section id="about">
+  <section id="forms" style="display:none">
+    <h2>Available Forms</h2>
+    <div id="formsList"></div>
+  </section>
+
+  <section id="about" style="display:none">
     <h2>About Us</h2>
     <p>📞 <a href="tel:+9194XXXXXX07">+91 94XXXXXX07</a></p>
     <p>✉️ <a href="mailto:vipulbishnoi2992@gmail.com">vipulbishnoi2992@gmail.com</a></p>
-    <button onclick="window.open('https://resume-vipul.netlify.app/')">Portfolio</button>
+    <button onclick="window.open('https://resume-vipul.netlify.app/')">
+      Visit Portfolio
+    </button>
   </section>
 </main>
-</div>
 
 <footer>© 2026 Vipul Bishnoi. All Rights Reserved.</footer>
 
@@ -104,20 +86,28 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 
-const formsDiv = document.getElementById("forms");
+const list = document.getElementById("formsList");
 const snap = await getDocs(collection(db,"forms"));
 
 snap.forEach(d=>{
  const f=d.data();
  if(!f.enabled) return;
- formsDiv.innerHTML+=`
+ list.innerHTML += `
   <div class="card">
     <h3>${f.name}</h3>
-    <button onclick="fill()">Fill Form</button>
+    <button onclick="confirm('Fill this form?')">Fill Form</button>
   </div>`;
 });
 
-window.fill=()=>confirm("Are you sure you want to fill this form?");
+window.openMenu=()=>{document.querySelector('.drawer').classList.add('open');
+document.querySelector('.overlay').classList.add('show')}
+window.closeMenu=()=>{document.querySelector('.drawer').classList.remove('open');
+document.querySelector('.overlay').classList.remove('show')}
+window.show=(id)=>{
+ ['home','forms','about'].forEach(s=>document.getElementById(s).style.display='none');
+ document.getElementById(id).style.display='block';
+ closeMenu();
+}
 </script>
 
 </body>
