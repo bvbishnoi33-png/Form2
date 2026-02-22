@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Form Portal</title>
+
+<!-- ===== INLINE CSS ===== -->
+<style>
+body{
+  margin:0;
+  font-family:Segoe UI, sans-serif;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:#fff;
+}
+header{
+  padding:20px;
+  text-align:center;
+  background:rgba(0,0,0,0.6);
+}
+.sidebar{
+  position:fixed;
+  left:0; top:0;
+  width:220px;
+  height:100%;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(12px);
+}
+.sidebar a{
+  display:block;
+  padding:15px;
+  color:#fff;
+  text-decoration:none;
+}
+.sidebar a:hover{background:rgba(255,255,255,0.15);}
+main{
+  margin-left:240px;
+  padding:30px;
+}
+.card{
+  background:rgba(255,255,255,0.12);
+  padding:20px;
+  border-radius:15px;
+  margin-bottom:20px;
+  transition:0.3s;
+}
+.card:hover{transform:scale(1.03);}
+button{
+  padding:10px 18px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+footer{
+  text-align:center;
+  padding:15px;
+  background:rgba(0,0,0,0.5);
+}
+.about a{color:#00c6ff;}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Dynamic Form Management Portal</h1>
+</header>
+
+<div class="sidebar">
+  <a href="#">Home</a>
+  <a href="#forms">Available Forms</a>
+  <a href="#about">About Us</a>
+</div>
+
+<main id="forms"></main>
+
+<section id="about" class="about" style="margin-left:240px;padding:30px;">
+  <h2>About Us</h2>
+  <p>📞 <a href="tel:+9194XXXXXX07">+91 94XXXXXX07</a></p>
+  <p>✉️ <a href="mailto:vipulbishnoi2992@gmail.com">vipulbishnoi2992@gmail.com</a></p>
+  <a href="https://resume-vipul.netlify.app/" target="_blank">
+    <button>Visit Portfolio</button>
+  </a>
+</section>
+
+<footer>
+  © 2026 Vipul Bishnoi. All Rights Reserved.
+</footer>
+
+<!-- ===== FIREBASE + JS ===== -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+ apiKey: "AIzaSyDVP6-QjZMZhUoWFJ80WRNH3ieyhHWq3gQ",
+ authDomain: "form2-9ad72.firebaseapp.com",
+ projectId: "form2-9ad72",
+ storageBucket: "form2-9ad72.firebasestorage.app",
+ messagingSenderId: "321802168055",
+ appId: "1:321802168055:web:3b64906c041bf69a7a55f2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const container = document.getElementById("forms");
+
+const snapshot = await getDocs(collection(db,"forms"));
+snapshot.forEach(doc=>{
+  const data = doc.data();
+  if(data.enabled){
+    container.innerHTML += `
+      <div class="card">
+        <h3>${data.name}</h3>
+        <button onclick="openForm('${doc.id}')">Fill Form</button>
+      </div>`;
+  }
+});
+
+window.openForm = (id)=>{
+  if(confirm("Are you sure you want to fill this form?")){
+    alert("Form will open here (dynamic rendering logic)");
+  }
+}
+</script>
+
+</body>
+</html>
