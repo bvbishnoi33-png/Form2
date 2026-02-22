@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Admin Dashboard</title>
+<title>Admin</title>
 <style>
-body{font-family:Segoe UI;background:#0f172a;color:#fff;padding:30px;}
-input,select,button{padding:8px;margin:5px;}
-.card{background:#1e293b;padding:15px;border-radius:10px;margin-top:10px;}
+body{font-family:Inter;background:#f4f6fb;padding:24px}
+.card{background:#fff;padding:16px;border-radius:10px;margin-bottom:12px}
+input,button{padding:8px}
+button{background:#2563eb;color:#fff;border:none;border-radius:6px}
 </style>
 </head>
 
 <body>
 
-<h1>Admin Dashboard</h1>
+<h2>Admin Dashboard</h2>
 
-<input id="formName" placeholder="Form Name">
-<button onclick="createForm()">Create Form</button>
+<input id="name" placeholder="Form Name">
+<button onclick="create()">Create</button>
 
 <div id="list"></div>
 
@@ -22,45 +23,42 @@ input,select,button{padding:8px;margin:5px;}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig = {
- apiKey: "AIzaSyDVP6-QjZMZhUoWFJ80WRNH3ieyhHWq3gQ",
- authDomain: "form2-9ad72.firebaseapp.com",
- projectId: "form2-9ad72"
-};
-
-const app = initializeApp(firebaseConfig);
+const app = initializeApp({
+ apiKey:"AIzaSyDVP6-QjZMZhUoWFJ80WRNH3ieyhHWq3gQ",
+ authDomain:"form2-9ad72.firebaseapp.com",
+ projectId:"form2-9ad72"
+});
 const db = getFirestore(app);
 
-window.createForm = async ()=>{
- await addDoc(collection(db,"forms"),{
-  name:formName.value,
-  enabled:true,
-  fields:[]
- });
- loadForms();
-}
-
-async function loadForms(){
+async function load(){
  list.innerHTML="";
- const snap = await getDocs(collection(db,"forms"));
+ const snap=await getDocs(collection(db,"forms"));
  snap.forEach(d=>{
   const f=d.data();
   list.innerHTML+=`
    <div class="card">
-    <b>${f.name}</b><br>
+    ${f.name} |
     <button onclick="toggle('${d.id}',${!f.enabled})">
       ${f.enabled?'Hide':'Show'}
     </button>
    </div>`;
  });
 }
+load();
+
+window.create=async()=>{
+ await addDoc(collection(db,"forms"),{
+  name:name.value,
+  enabled:true
+ });
+ name.value="";
+ load();
+};
 
 window.toggle=async(id,val)=>{
  await updateDoc(doc(db,"forms",id),{enabled:val});
- loadForms();
-}
-
-loadForms();
+ load();
+};
 </script>
 
 </body>
