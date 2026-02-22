@@ -2,35 +2,17 @@
 <html>
 <head>
 <title>Admin Login</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  font-family:Inter;
-  background:#0f172a;
-}
-.box{
-  background:#fff;
-  padding:30px;
-  border-radius:12px;
-  width:320px;
-}
-input,button{
-  width:100%;
-  padding:12px;
-  margin-top:12px;
-}
-button{
-  background:#2563eb;
-  color:#fff;
-  border:none;
-}
+body{margin:0;height:100vh;display:flex;justify-content:center;align-items:center;
+background:#0f172a;font-family:Inter}
+.box{background:#fff;padding:32px;border-radius:16px;width:320px}
+input,button{width:100%;padding:12px;margin-top:12px}
+button{background:#2563eb;color:#fff;border:none;border-radius:8px}
 </style>
 </head>
-<body>
 
+<body>
 <div class="box">
 <h2>Admin Login</h2>
 <input id="email" type="email" placeholder="Email">
@@ -52,7 +34,7 @@ window.login=()=>{
  signInWithEmailAndPassword(auth,email.value,pass.value)
  .then(()=>location.href="admin.html")
  .catch(e=>alert(e.message));
-};
+}
 </script>
 </body>
 </html>
