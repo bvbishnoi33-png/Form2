@@ -1,40 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin Login</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
 <style>
-body{margin:0;height:100vh;display:flex;justify-content:center;align-items:center;
-background:#0f172a;font-family:Inter}
-.box{background:#fff;padding:32px;border-radius:16px;width:320px}
-input,button{width:100%;padding:12px;margin-top:12px}
-button{background:#2563eb;color:#fff;border:none;border-radius:8px}
+body {
+  margin: 0;
+  height: 100vh;
+  background: #0f172a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Inter, Segoe UI;
+}
+.card {
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 16px;
+  width: 320px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.2);
+}
+h2 { margin-top: 0; }
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 16px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+}
 </style>
 </head>
 
 <body>
-<div class="box">
-<h2>Admin Login</h2>
-<input id="email" type="email" placeholder="Email">
-<input id="pass" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
+<div class="card">
+  <h2>Admin Login</h2>
+  <input placeholder="Email">
+  <input type="password" placeholder="Password">
+  <button>Login</button>
 </div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-const app = initializeApp({
- apiKey:"AIzaSyDVP6-QjZMZhUoWFJ80WRNH3ieyhHWq3gQ",
- authDomain:"form2-9ad72.firebaseapp.com"
-});
-const auth = getAuth(app);
-
-window.login=()=>{
- signInWithEmailAndPassword(auth,email.value,pass.value)
- .then(()=>location.href="admin.html")
- .catch(e=>alert(e.message));
-}
-</script>
 </body>
 </html>
